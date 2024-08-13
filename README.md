@@ -33,9 +33,11 @@ Your `config.json` is where the magic happens. You can edit it on the fly while 
   "range_sensor_trigger_pin": 5,
   "range_sensor_echo_pin": 6,
   "buzzer_pin": 7,
-  "desk_bottom_position": 20.5,
-  "desk_top_position": 100.0,
-  "duration_to_stand": "1h30m0s",
-  "duration_to_sit": "45m0s",
+
+  "desk_bottom_position": 50.5,
+  "desk_top_position": 120.0,
+
+  "duration_to_stand": "15m",
+  "duration_to_sit": "1h",
   "notify_to_sit": true
 }
