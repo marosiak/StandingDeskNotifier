@@ -60,8 +60,8 @@ func getDefault() Config {
 		BuzzerPin:             23,
 		DeskBottomPosition:    95,
 		DeskTopPosition:       120,
-		DurationToStand:       HumanFriendlyDuration(time.Minute * 60),
-		DurationToSit:         HumanFriendlyDuration(time.Minute * 10),
+		DurationToStand:       HumanFriendlyDuration(time.Minute * 10),
+		DurationToSit:         HumanFriendlyDuration(time.Minute * 50),
 		NotifyToSit:           true,
 	}
 }

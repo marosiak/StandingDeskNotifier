@@ -18,13 +18,22 @@ Keeping it simple and straightforward, here’s what you’ll need:
 1. **Raspberry Pi Zero** (with Raspbian and charging cable, of course).
 2. **HC-SR04** - The trusty ultrasonic sensor measuring the distance from desk to floor.
 3. **Active Buzzer** - The source of your new productivity (and maybe a bit of frustration).
+4. **1x resistor 2.7k or 2.2k**
+5. **1x resistor 4.7k**
+
+## 🛠️ Hardware installation
+// TODO
+
+You will need to modify HC-SR04 in order to work with 3.3v
+
+**Tutorial**: https://www.instructables.com/Modify-Ultrasonic-Sensors-for-3-Volts-Logic-prepar/
 
 ## 💰 Hardware Prices
-1. **Amazon.com**: ~ $26.50
-2. **Botland.pl**: ~ $17.68 (~ 69 PLN)
+1. **Amazon.com**: ~ $27.50
+2. **Botland.pl**: ~ $19.68 (~ 74 PLN)
 
 ## 🚀 Installation
-It’s as easy as running `./install.sh`. The script does all the heavy lifting. Once it’s done, it’ll drop a few logs telling you where it stashed the goodies—like the binary and your shiny new `config.json`.
+It’s as easy as running `chmod +x install.sh && ./install.sh`. The script does all the heavy lifting. Once it’s done, it’ll drop a few logs telling you where it stashed the goodies—like the binary and your shiny new `config.json`.
 
 ## 🔧 Configuration
 Your `config.json` is where the magic happens. You can edit it on the fly while the app is running, but remember, changes will take about 10 minutes to kick in. If patience isn’t your virtue, just restart the app after tweaking the config.
