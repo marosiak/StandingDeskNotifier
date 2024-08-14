@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"log/slog"
 	"os"
 	"time"
 )
@@ -66,13 +67,16 @@ func getDefault() Config {
 	}
 }
 
+const configFilePath = "config.json"
+
 func NewConfig() *Config {
 	if config == nil || time.Since(lastUpdatedAt) > time.Minute*10 {
 		// open from config.json if exists, else create with default
 		config = &Config{}
 		lastUpdatedAt = time.Now()
 
-		by, err := os.ReadFile("config.json")
+		slog.Info("opening config file", slog.Any("path", configFilePath))
+		by, err := os.ReadFile(configFilePath)
 		if err == nil {
 			err = json.Unmarshal(by, config)
 			if err == nil {
@@ -85,7 +89,7 @@ func NewConfig() *Config {
 			return nil
 		}
 
-		err = os.WriteFile("config.json", defaultConfigBy, 0644)
+		err = os.WriteFile(configFilePath, defaultConfigBy, 0666)
 		if err != nil {
 			panic(err)
 		}

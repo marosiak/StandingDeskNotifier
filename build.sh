@@ -2,7 +2,6 @@
 
 APP_NAME="DeskNotifier"
 OUTPUT_DIR="output"
-TARGET_DIR="/opt/$APP_NAME"
 SERVICE_FILE="/etc/systemd/system/$APP_NAME.service"
 
 # Create output directory if it doesn't exist
@@ -31,7 +30,7 @@ cat <<EOL > "$OUTPUT_DIR/install.sh"
 #!/bin/bash
 
 APP_NAME="$APP_NAME"
-TARGET_DIR="$TARGET_DIR"
+TARGET_DIR="\$(dirname "\$(realpath "\$0")")"
 SERVICE_FILE="$SERVICE_FILE"
 
 echo "Using current directory: \$TARGET_DIR"
@@ -57,6 +56,8 @@ User=pi
 Group=pi
 WorkingDirectory=\$TARGET_DIR
 Environment=GO_ENV=production
+ProtectSystem=off
+NoNewPrivileges=false
 
 [Install]
 WantedBy=multi-user.target
