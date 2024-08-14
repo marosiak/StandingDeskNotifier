@@ -28,22 +28,23 @@ func NewApp() *App {
 func (app *App) run() {
 	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
+	slog.Info("App is running")
 
 	for {
 		select {
 		case <-ticker.C:
-			app.checkDeskStatus()
+			distance, err := app.rangeSensor.DistInCM()
+			if err != nil {
+				slog.Error("reading distance", slog.Any("error", err))
+				continue
+			}
+			slog.Info("distance read", slog.Any("distance", distance))
+			app.checkDeskStatus(distance)
 		}
 	}
 }
 
-func (app *App) checkDeskStatus() {
-	distance, err := app.rangeSensor.DistInCM()
-	if err != nil {
-		slog.Error("reading distance", slog.Any("error", err))
-		return
-	}
-
+func (app *App) checkDeskStatus(distance float32) {
 	app.desk.UpdateCurrentPosition(distance)
 
 	if app.desk.IsLow() {
@@ -54,19 +55,19 @@ func (app *App) checkDeskStatus() {
 }
 
 func (app *App) handleSittingTooLong() {
-	secondsSittingTooLong := (app.desk.GetTimeSpentDown() - app.cfg.DurationToSit).Seconds()
+	secondsSittingTooLong := (app.desk.GetTimeSpentDown() - app.cfg.DurationToSit.Duration()).Seconds()
 
-	switch {
-	case secondsSittingTooLong > 25:
-		app.speaker.Beep(4, 3000)
-	case secondsSittingTooLong > 0:
-		app.speaker.Beep(1, 100)
-		time.Sleep(time.Second * 25)
+	if secondsSittingTooLong <= 0 {
+		return
+	}
+	app.speaker.Beep(1, 300)
+	if secondsSittingTooLong < 45 {
+		time.Sleep(time.Second * 50)
 	}
 }
 
 func (app *App) handleStandingTooLong() {
-	if app.desk.GetTimeSpentDown().Minutes() > app.cfg.DurationToStand.Minutes() {
+	if app.desk.GetTimeSpentDown().Minutes() > app.cfg.DurationToStand.Duration().Minutes() {
 		if app.cfg.NotifyToSit {
 			app.speaker.Beep(1, 100)
 		}
