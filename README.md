@@ -1,6 +1,9 @@
 # 🏋️‍♂️ Standing Desk Notifier
 Bought a standing desk just to sit in front of it like it’s a regular desk? Guilty as charged? 😅 No worries! I’ve got your back (literally). Let’s get those glutes off the chair with this nifty little notifier that *politely* insists you stand up. 
 
+<img src="https://github.com/user-attachments/assets/29d9495a-49a8-494e-a36b-cd556d98ae97" height="350">
+
+
 ## How It Works: A User’s Tale 🎢
 
 1. **You're sitting**... comfortably.
@@ -48,5 +51,12 @@ Your `config.json` is where the magic happens. You can edit it on the fly while 
 
   "duration_to_stand": "15m",
   "duration_to_sit": "1h",
-  "notify_to_sit": true
+  "notify_to_sit": true,
+
+  "http_server_enabled":true,
+  "auto_refresh_page_delay_ms":1000,
 }
+```
+
+<img src="https://github.com/user-attachments/assets/8f90d743-a9dc-43ec-8b46-75ef9ae85fce" height="250">
+<img src="https://github.com/user-attachments/assets/00469d41-2820-412c-bbdb-40e0f8a0f56f" height="250">
