@@ -46,10 +46,11 @@ func (a *Server) Home(c *fiber.Ctx) error {
 		"Title":                 "DeskNotifier",
 		"IsStanding":            a.desk.IsHigh(),
 		"IsLoaded":              a.desk.IsLoaded(),
+		"CanSit":                a.desk.GetTimeUntilStand(cfg.DurationToSit.Duration()).Seconds() < 0,
 		"StandingDuration":      formatDuration(a.desk.GetTimeSpentUp()),
 		"SittingDuration":       formatDuration(a.desk.GetTimeSpentDown()),
 		"RemainingSittingTime":  formatDuration(a.desk.GetTimeUntilStand(cfg.DurationToSit.Duration()).Abs()),
-		"RemainingStandingTime": formatDuration(a.desk.GetTimeUntilSit(cfg.DurationToStand.Duration()).Abs()),
+		"RemainingStandingTime": formatDuration(a.desk.GetTimeUntilSit(cfg.DurationToStand.Duration())),
 		"RefreshInterval":       cfg.AutoRefreshPageDelayMs,
 	})
 }

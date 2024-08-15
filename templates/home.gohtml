@@ -38,7 +38,11 @@
             <div class="text-center">
                 <h2 class="text-2xl font-semibold text-green-600 mb-4">🧍Standing</h2>
                 <p class="text-lg mb-2">Duration: <span class="font-medium">{{.StandingDuration}}</span></p>
-                <p class="text-lg">You have to stand for <span class="font-medium">{{.RemainingStandingTime}}</span> more.</p>
+                {{if .CanSit}}
+                    <p class="text-lg">You can sit now.</p>
+                {{else}}
+                    <p class="text-lg">You have to stand for <span class="font-medium">{{.RemainingStandingTime}}</span> more.</p>
+                {{end}}
             </div>
         {{else}}
             <div class="text-center">
