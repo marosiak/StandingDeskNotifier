@@ -14,6 +14,8 @@ type App struct {
 	desk        *domain.Desk
 	rangeSensor *electronics.RangeSensor
 	speaker     *electronics.Buzzer
+
+	firstChanceToStandUpCommunicatedAt *time.Time
 }
 
 func NewApp() *App {
@@ -51,8 +53,15 @@ func (app *App) checkDeskStatus(distance float32) {
 	if app.desk.IsLow() {
 		app.handleSittingTooLong()
 	} else {
-		app.handleStandingTooLong()
+		app.handleStandingEnough()
 	}
+}
+
+func (app *App) RegisterFirstSignalToStandUp() {
+	tmp := time.Now()
+	app.firstChanceToStandUpCommunicatedAt = &tmp
+	app.speaker.Beep(1, 350)
+
 }
 
 func (app *App) handleSittingTooLong() {
@@ -61,19 +70,25 @@ func (app *App) handleSittingTooLong() {
 	if secondsSittingTooLong <= 0 {
 		return
 	}
-	app.speaker.Beep(1, 300)
-	if secondsSittingTooLong < 45 {
-		time.Sleep(time.Second * 50)
+
+	if app.firstChanceToStandUpCommunicatedAt == nil {
+		app.RegisterFirstSignalToStandUp()
+		return
+	}
+
+	if time.Since(*app.firstChanceToStandUpCommunicatedAt) > time.Second*45 {
+		app.speaker.Beep(1, 450)
 	}
 }
 
-func (app *App) handleStandingTooLong() {
-	if app.desk.GetTimeSpentDown().Minutes() > app.cfg.DurationToStand.Duration().Minutes() {
+func (app *App) handleStandingEnough() {
+	if app.desk.GetTimeSpentUp().Minutes() > app.cfg.DurationToStand.Duration().Minutes() {
 		if app.cfg.NotifyToSit {
 			app.speaker.Beep(1, 100)
 		}
 		slog.Info("Restarting timers because stood enugh time")
 		app.desk.ResetTimeRecords()
+		app.firstChanceToStandUpCommunicatedAt = nil
 	}
 }
 
