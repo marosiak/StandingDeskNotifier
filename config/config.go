@@ -41,14 +41,16 @@ func (d HumanFriendlyDuration) String() string {
 }
 
 type Config struct {
-	RangeSensorTriggerPin int8                  `json:"range_sensor_trigger_pin"`
-	RangeSensorEchoPin    int8                  `json:"range_sensor_echo_pin"`
-	BuzzerPin             uint8                 `json:"buzzer_pin"`
-	DeskBottomPosition    float32               `json:"desk_bottom_position"`
-	DeskTopPosition       float32               `json:"desk_top_position"`
-	DurationToStand       HumanFriendlyDuration `json:"duration_to_stand"`
-	DurationToSit         HumanFriendlyDuration `json:"duration_to_sit"`
-	NotifyToSit           bool                  `json:"notify_to_sit"` // make "beep" after passing minimum time to stand
+	RangeSensorTriggerPin  int8                  `json:"range_sensor_trigger_pin"`
+	RangeSensorEchoPin     int8                  `json:"range_sensor_echo_pin"`
+	BuzzerPin              uint8                 `json:"buzzer_pin"`
+	DeskBottomPosition     float32               `json:"desk_bottom_position"`
+	DeskTopPosition        float32               `json:"desk_top_position"`
+	DurationToStand        HumanFriendlyDuration `json:"duration_to_stand"`
+	DurationToSit          HumanFriendlyDuration `json:"duration_to_sit"`
+	NotifyToSit            bool                  `json:"notify_to_sit"` // make "beep" after passing minimum time to stand
+	HttpServerEnabled      bool                  `json:"http_server_enabled"`
+	AutoRefreshPageDelayMs int                   `json:"auto_refresh_page_delay_ms"`
 }
 
 var config *Config
@@ -64,12 +66,15 @@ func getDefault() Config {
 		DurationToStand:       HumanFriendlyDuration(time.Minute * 10),
 		DurationToSit:         HumanFriendlyDuration(time.Minute * 50),
 		NotifyToSit:           true,
+
+		HttpServerEnabled:      true,
+		AutoRefreshPageDelayMs: 1000,
 	}
 }
 
 const configFilePath = "config.json"
 
-func NewConfig() *Config {
+func Get() *Config {
 	if config == nil || time.Since(lastUpdatedAt) > time.Minute*10 {
 		// open from config.json if exists, else create with default
 		config = &Config{}

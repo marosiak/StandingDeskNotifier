@@ -28,6 +28,9 @@ func NewDesk(bottomPosition float32, topPosition float32) *Desk {
 	}
 
 }
+func (d *Desk) IsLoaded() bool {
+	return d.distanceToFloor != 0
+}
 func (d *Desk) IsHigh() bool {
 	return d.distanceToFloor >= d.midPoint
 }
@@ -54,6 +57,14 @@ func (d *Desk) GetTimeSpentUp() time.Duration {
 
 func (d *Desk) GetTimeSpentDown() time.Duration {
 	return *d.TimeSpentDown
+}
+
+func (d *Desk) GetTimeUntilStand(targetDuration time.Duration) time.Duration {
+	return d.GetTimeSpentDown() - targetDuration
+}
+
+func (d *Desk) GetTimeUntilSit(targetDuration time.Duration) time.Duration {
+	return d.GetTimeSpentUp() - targetDuration
 }
 
 func (d *Desk) ResetTimeRecords() {

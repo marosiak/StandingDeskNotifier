@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script>
+        let refreshTimeout;
+
+        function startRefreshTimer() {
+            refreshTimeout = setTimeout(function () {
+                if (!document.hidden) {
+                    window.location.reload();
+                }
+            }, {{.RefreshInterval}});
+        }
+
+        function resetRefreshTimer() {
+            clearTimeout(refreshTimeout);
+            if (!document.hidden) {
+                window.location.reload();
+            } else {
+                startRefreshTimer();
+            }
+        }
+
+        document.addEventListener('visibilitychange', resetRefreshTimer);
+        startRefreshTimer();
+    </script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<div class="max-w-xl mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
+    <h1 class="text-3xl font-bold text-center mb-6">{{.Title}}</h1>
+    {{if .IsLoaded}}
+        {{if .IsStanding}}
+            <div class="text-center">
+                <h2 class="text-2xl font-semibold text-green-600 mb-4">🧍Standing</h2>
+                <p class="text-lg mb-2">Duration: <span class="font-medium">{{.StandingDuration}}</span></p>
+                <p class="text-lg">You have to stand for <span class="font-medium">{{.RemainingStandingTime}}</span> more.</p>
+            </div>
+        {{else}}
+            <div class="text-center">
+                <h2 class="text-2xl font-semibold text-blue-600 mb-4">🪑Sitting</h2>
+                <p class="text-lg mb-2">Duration: <span class="font-medium">{{.SittingDuration}}</span></p>
+                <p class="text-lg">You can sit for <span class="font-medium">{{.RemainingSittingTime}}</span> more.</p>
+            </div>
+        {{end}}
+    {{else}}
+        <div class="text-center">
+            <h2 class="text-2xl font-semibold text-gray-600 mb-4">⏳ Waiting for data</h2>
+            <p class="text-lg text-gray-500">The sensor didn't read value yet, first time takes longer</p>
+        </div>
+    {{end}}
+</div>
+</body>
+</html>

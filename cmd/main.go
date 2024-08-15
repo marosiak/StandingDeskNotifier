@@ -4,6 +4,7 @@ import (
 	"DeskNotifier/config"
 	"DeskNotifier/domain"
 	"DeskNotifier/lib/electronics"
+	"DeskNotifier/server"
 	"log/slog"
 	"time"
 )
@@ -16,7 +17,7 @@ type App struct {
 }
 
 func NewApp() *App {
-	cfg := config.NewConfig()
+	cfg := config.Get()
 	return &App{
 		cfg:         cfg,
 		desk:        domain.NewDesk(cfg.DeskBottomPosition, cfg.DeskTopPosition),
@@ -38,7 +39,7 @@ func (app *App) run() {
 				slog.Error("reading distance", slog.Any("error", err))
 				continue
 			}
-			slog.Info("distance read", slog.Any("distance", distance))
+			slog.Info("rangeSensor", slog.Any("distance", distance))
 			app.checkDeskStatus(distance)
 		}
 	}
@@ -71,11 +72,17 @@ func (app *App) handleStandingTooLong() {
 		if app.cfg.NotifyToSit {
 			app.speaker.Beep(1, 100)
 		}
+		slog.Info("Restarting timers because stood enugh time")
 		app.desk.ResetTimeRecords()
 	}
 }
 
 func main() {
 	app := NewApp()
-	app.run()
+	if app.cfg.HttpServerEnabled {
+		go app.run()
+		server.New(app.desk).Start()
+	} else {
+		app.run()
+	}
 }
