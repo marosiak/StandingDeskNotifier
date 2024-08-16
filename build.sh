@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APP_NAME="DeskNotifier"
-OUTPUT_DIR="output"
+OUTPUT_DIR="build"
 SERVICE_FILE="/etc/systemd/system/$APP_NAME.service"
 
 # Create output directory if it doesn't exist
