@@ -67,8 +67,12 @@ func (d *Desk) GetTimeUntilSit(targetDuration time.Duration) time.Duration {
 	return d.GetTimeSpentUp() - targetDuration
 }
 
-func (d *Desk) ResetTimeRecords() {
-	d.TimeSpentUp = new(time.Duration)
+func (d *Desk) ResetSittingTimer() {
 	d.TimeSpentDown = new(time.Duration)
+	d.updatedAt = time.Now()
+}
+
+func (d *Desk) ResetStandingTimer() {
+	d.TimeSpentUp = new(time.Duration)
 	d.updatedAt = time.Now()
 }

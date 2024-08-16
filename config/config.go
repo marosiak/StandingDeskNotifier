@@ -61,11 +61,14 @@ func getDefault() Config {
 		RangeSensorTriggerPin: 17,
 		RangeSensorEchoPin:    27,
 		BuzzerPin:             23,
-		DeskBottomPosition:    95,
-		DeskTopPosition:       120,
-		DurationToStand:       HumanFriendlyDuration(time.Minute * 10),
-		DurationToSit:         HumanFriendlyDuration(time.Minute * 50),
-		NotifyToSit:           true,
+
+		DeskBottomPosition: 58,
+		DeskTopPosition:    72,
+
+		NotifyToSit: false,
+
+		DurationToStand: HumanFriendlyDuration(time.Minute * 9),
+		DurationToSit:   HumanFriendlyDuration(time.Minute * 49),
 
 		HttpServerEnabled:      true,
 		AutoRefreshPageDelayMs: 1000,

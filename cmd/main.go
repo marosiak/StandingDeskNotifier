@@ -51,9 +51,9 @@ func (app *App) checkDeskStatus(distance float32) {
 	app.desk.UpdateCurrentPosition(distance)
 
 	if app.desk.IsLow() {
-		app.handleSittingTooLong()
+		app.handleSitting()
 	} else {
-		app.handleStandingEnough()
+		app.handleStanding()
 	}
 }
 
@@ -64,9 +64,9 @@ func (app *App) RegisterFirstSignalToStandUp() {
 
 }
 
-func (app *App) handleSittingTooLong() {
+func (app *App) handleSitting() {
 	secondsSittingTooLong := (app.desk.GetTimeSpentDown() - app.cfg.DurationToSit.Duration()).Seconds()
-
+	app.desk.ResetStandingTimer() // the idea is, that we reset standing timer only when we're sitting again
 	if secondsSittingTooLong <= 0 {
 		return
 	}
@@ -81,13 +81,13 @@ func (app *App) handleSittingTooLong() {
 	}
 }
 
-func (app *App) handleStandingEnough() {
+func (app *App) handleStanding() {
 	if app.desk.GetTimeSpentUp().Minutes() > app.cfg.DurationToStand.Duration().Minutes() {
 		if app.cfg.NotifyToSit {
 			app.speaker.Beep(1, 100)
 		}
 		slog.Info("Restarting timers because stood enugh time")
-		app.desk.ResetTimeRecords()
+		app.desk.ResetSittingTimer()
 		app.firstChanceToStandUpCommunicatedAt = nil
 	}
 }
